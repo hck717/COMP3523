@@ -1,0 +1,415 @@
+\documentclass[11pt]{article} % Slightly smaller font (11pt) helps "tighten" the look
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry} % Tighter margins (0.8 inch)
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{soul}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+% --- FORMATTING SETUP ---
+% Tighten section spacing
+\titleformat{\section}
+  {\normalfont\large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{6pt}{3pt} % Less space around sections
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt} % Less space around subsections
+
+% Tighten lists
+\setlist{nosep} 
+
+% Tighten paragraph spacing slightly
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt} % Reduced from 6pt
+
+\begin{document}
+
+% --- TITLE BLOCK ---
+\begin{center}
+    \textbf{\large COMP3523 Security and Privacy in Artificial Intelligence 2025-26}\\[0.3em]
+    \textbf{\Large Research Report -- Evaluating protective methods to mitigate the effect of hallucinations on SLM}\\[1em]
+    
+    \textbf{Student Name: Ho Chun Kau, Li Yan Kit}\\
+    \textbf{Student UID: 3036068876, 3036085290}\\[0.3em]
+    \textbf{Date of Submission: 14-12-2025}
+\end{center}
+
+\section*{1. Introduction}
+
+Artificial intelligence (AI) is transforming different industries and
+schools across the world through different applications such as
+retrieval-augmented generation (RAG) (Jones, 2025; Lewis et al., 2020).
+Despite the skyrocketing adoption of AI, the concerns of hallucinations
+are becoming a heated debate that raises ethical issues in AI usage
+(Jones, 2025; IEEE Xplore, 2024). This research paper aims to provide an
+overview of the effectiveness of different strategies in reducing
+hallucination rate.
+
+\subsection*{1.1 Background}
+
+Large Language Models (LLMs) have become pivotal to recent advances in
+natural language processing through a remarkable improvement in
+proficiency and speed of our daily work. (Kalai et al., 2024). However,
+while adoption across diverse domains are being rapid, their
+transformative utility and inherent limitations are being overlooked.
+Among all challenges, hallucination is one of the most important ones.
+It refers to the tendency of models to produce fluent yet factually
+inaccurate outputs (Kalai et al., 2024; IEEE Xplore, 2024). These errors
+caused trust and dependability, especially in settings where factual
+accuracy is essential (Jones, 2025).
+
+This project aims to address these challenges by evaluating the
+effectiveness of several defense strategies with the evaluation on
+TruthfulQA dataset. TruthfulQA dataset will provide insightful
+performance metrics of the outputs by rigorously assessing factual
+correctness (Lin et al., 2021). By comparing hallucination rates across
+all strategies, a systematic assessment will be provided.
+
+In doing so, the project leverages this benchmark while focusing on
+small, quantized models such as DeepSeek-R1-Distill-Qwen-1.5B and
+Granite-4.0-h-1b. This focus situates the work within the broader effort
+to ensure that resource-efficient models remain both accessible and
+dependable.
+
+\subsection*{1.2 Motivation}
+
+The motivation arises because, in general, the reliance on LLMs is
+growing each day in everyday workflows and decision-making everywhere.
+While large-scale models have shown impressive performance,
+accessibility issues arise because of their computational demands. This
+means that, for most purposes, a smaller or quantized model can prove to
+be a better solution because it offers scalability and effectiveness.
+Despite the advantages of having a lightweight LLM model, they are often
+more prone to hallucinations (Kalai et al., 2024). Therefore, solving
+this vulnerability is an imperative task if these models are to be
+deployed responsibly in resource-constrained environments where
+results\textquotesingle{} accuracy is not negotiable.
+
+This project systematically evaluates a range of strategy-based defenses
+to identify approaches that offer an effective balance between
+efficiency and factual truthfulness. Ultimately, the study aims to
+provide suggestions on having trustworthy adoption of LLM systems by
+eliminating the hallucination risk.
+
+\subsection*{1.3 Objectives}
+
+The goals of this project are to implement and compare several
+strategies of hallucination prevention on the LLM models. Their
+effectiveness against hallucination will be tested using the TruthfulQA
+dataset. Their effectiveness will be quantified using a range of
+metrics: BLEU, ROUGE-L, BERTScore, BLEURT, and multiple-choice accuracy.
+They provide a clear picture of the possibility to prevent hallucination
+and give an overview of the trade-offs between fluency, truthfulness,
+and computational efficiency. More importantly, the project also aims at
+reproducibility and transparency through structured workflows and clear
+documentation for future larger-scale research.
+
+\subsection*{1.4 Scope of Work}
+
+The scope of this project is defined by the implementation and
+evaluation of the proposed defense strategies. Each strategy in
+particular will be evaluated against the reference answers on the
+TruthfulQA dataset using small language models. This work is limited to
+this dataset and these models, focusing on the explainability of the
+models\textquotesingle{} hallucination situation with constrained
+computational resources.While the findings may have implications for
+larger models, the primary emphasis remains on practical defences for
+language models.
+
+\subsection*{1.5 Report Outline}
+
+The following parts of the report is organized into several sections:
+methodology describes the design of the project, including the selection
+of LLM models, the logic of the defence strategies, and the evaluation
+metrics; results present quantitative and qualitative findings across
+all strategies; the discussion section interprets these results,
+underlining strengths and limitations for different strategies and
+considering broader improvements and combinations of methods. The
+conclusion summarizes the contributions and suggests directions for
+future research and application.
+
+\section*{2. Methodology}
+
+\emph{Table 1: Overview of Hallucination Defenses}
+
+\begin{longtable}{p{0.25\textwidth} p{0.2\textwidth} p{0.5\textwidth}}
+\toprule
+\textbf{Strategy} & \textbf{Category} & \textbf{Core Mechanism} \\
+\midrule
+\endhead
+Baseline & None & No extra guidance; shows model's natural hallucination rate \\
+Cautious Prompting & Prompting & Encourages abstention (``I don't know'') instead of guessing \\
+Chain-of-Thought Prompting & Prompting & Uses internal stepwise reasoning before giving a final answer \\
+Fact-Checker Prompting & Prompting & Frames model as a fact-checker focused on verifiable facts \\
+Retrieval-Augmented Generation (RAG) & External Knowledge & Grounds answers in retrieved Wikipedia summary context \\
+Multi-Agent Debate & Multi-model / Debate & Two models critique then synthesize a more reliable answer \\
+Contrastive Decoding & Decoding Control & Subtracts weak-prompt logits from strong-prompt logits (\(\alpha=0.5\)) to suppress spurious continuations \\
+Self-Consistency & Sampling / Consensus & Samples multiple answers and selects the semantic medoid (BERTScore) or majority vote fallback \\
+\bottomrule
+\end{longtable}
+
+The methodology of this project is designed to evaluate the
+effectiveness of several hallucination prevention strategies on the
+TruthfulQA dataset using small, quantized language models. In the
+following sub-sections, the rationale and implementation of each
+strategy included in Table 1 will be explained with details alongside
+the methodology of the evaluation of their performances.
+
+\subsection*{2.1 Setup}
+
+All experiments were conducted on Kaggle, which provides free access to
+NVIDIA Tesla P100 GPUs. Despite the ability of larger models, the
+research team works under the limited GPU usage of thirty hours per
+week, and so the team selected models in a one-and-a-half billion
+parameter range to experiment. The primary model selected was
+DeepSeek-R1-Distill-Qwen-1.5B, chosen for its balance of efficiency and
+capability. A secondary model, Granite-4.0-h-1b, was included to support
+multi-agent debate experiments. Both models were loaded with four-bit
+quantization using NF4 and bfloat16 compute settings to maximize
+efficiency and reduce memory usage. This setup ensured that the project
+can be finished within the Kaggle free-tier environment and supported
+all the aims of the research project.
+
+\subsection*{2.2 Evaluation}
+
+\subsection*{2.3 Baseline}
+
+At first, the project presents all the questions from the TruthfulQA
+dataset directly to the DeepSeek model without any instructions. The
+model was simply inputted with the questions and was prompted to provide
+an answer. This approach revealed the model's natural tendencies,
+including its original accuracy and the ability to avoid hallucination
+under the rewarding mechanism. The baseline was essential for further
+comparison with different prevention methods to show the effectiveness.
+
+\subsection*{2.4 Prompting Methods}
+
+Prompting methods represent a series of strategies that leverage the
+prompt instructions to guide the model's behaviours (Kalai et al.,
+2024). In particular, the project aims to investigate the performance of
+three distinct prompting strategies, including cautious prompting,
+chain-of-thought prompting, and fact-checker prompting. Each style was
+designed to mitigate hallucinations by shaping the model's thinking and
+processing styles.
+
+\subsection*{2.4.1 Cautious Prompting}
+
+Cautious prompting guides the model with a clear system instruction that
+explicitly encourages the model to answer only when confident and to
+respond with ``I don't know'' if there is no obvious answer (Kalai et
+al., 2024). The model was guided with a prompt: \emph{``Answer only if
+certain. Else: `I don't know'.''} These instructions were designed to
+avoid the situation where language models generate ``make-up'' answers
+because of the rewarding mechanism by suggesting a model guess and
+answer even without clear evidence. With this strategy, the model is
+expected to admit uncertainty rather than fabricate information. This
+method was particularly effective in contexts where speculative answers
+could mislead users, as it prioritized accuracy over fluency.
+
+\subsection*{2.4.2 Chain-of-Thought Prompting}
+
+Chain-of-thought prompting instructs the model to think and process step
+by step before producing a final, concise answer (Kalai et al., 2024).
+The system guidance was phrased as: \emph{``Think step by step, then
+give the final answer.''} This approach encouraged the model to
+internally generate a reasoning process, which helped anchor its output
+in logical consistency. Although the intermediate reasoning was not
+always shown to the user, this act of thinking improved the factual
+quality of the final answer, referencing the human's thinking mechanism.
+The rationale was that leveraging structured reasoning is likely to
+reduce unsupported outputs, and so reduce the hallucination rate.
+
+\subsection*{2.4.3 Fact-Checker Prompting}
+
+The fact-checker prompting method positioned the model to validate its
+answer before outputting it to users. The system instruction was framed
+as: \emph{``You are a fact-checker. Give a factual answer.''} This
+role-based prompt encouraged the model to cross-reference the answer
+with its internal knowledge and avoid speculative claims. By having
+fact-checking logic, the model was suggested to recall widely accepted
+truths rather than inventing incorrect statements. The rationale adopted
+by the stance of a fact-checker reduces hallucinations and enhances
+trustworthiness.
+
+\subsection*{2.5 Retrieval-Augmented Generation (RAG)}
+
+Retrieval-Augmented Generation integrated external authentic knowledge
+into the model's output by retrieving summaries from Wikipedia and
+embedding them into the prompt (Lewis et al., 2020). The model acts as a
+retrieval-augmented generation model to retrieve information from
+Wikipedia. The system instruction was framed as: \emph{``Use this
+context: \textless Wikipedia summary\textgreater.''} The retrieved
+summary then provided factual grounding for the model's response, and
+the model will first learn from the fetched information, then give a
+more reliable answer. Assuming the truthfulness of Wikipedia, it is
+expected the system can effectively reduce the possibility of faulty
+internal representations. The rationale was that hallucinations often
+occur when models attempt to fill gaps in their knowledge with plausible
+but incorrect information. This method is particularly valuable for
+small models, which may lack the breadth of training data available to
+larger counterparts.
+
+\subsection*{2.6 Multi-Agent Debate}
+
+The multi-agent debate method leveraged the power of two models,
+DeepSeek and Granite. They are engaging in a structured exchange. They
+were guided by instructions such as: \emph{``You are a precise
+fact-checker. Critique the following answer.''} Each model generates an
+initial answer to the question, after which they critique each other's
+responses. Finally, DeepSeek serves as the main model to synthesize a
+final answer by integrating the strongest elements of both perspectives,
+guided by the instruction: \emph{``Synthesize the best final answer from
+the debate.''} The rationale was that adversarial collaboration can
+expose weaknesses and reduce errors. By critiquing each other, the
+models highlight inconsistencies or hallucinations. The synthesis stage
+is expected to generate a more reliable final output, drawing
+inspiration from human debate and enhancing truthfulness through
+cross-validation.
+
+\subsection*{2.7 Contrastive Decoding}
+
+This strategy contrasts the model's token logits under a strong, 
+truth-oriented prompt with a deliberately weakened prompt to suppress 
+spurious patterns. Concretely, prompts are constructed for the same question: 
+(i) a \emph{strong} instruction (truthful QA, require a single ``Answer: 
+\textless short answer\textgreater'' line), and (ii) a \emph{weak} 
+instruction (``You are an assistant.''). During generation, a logits processor 
+subtracts a scaled copy of the weak-prompt logits from the strong-prompt logits, i.e.,
+\[\text{logits}_{\text{cd}} = \text{logits}_{\text{strong}} - \alpha\, \text{logits}_{\text{weak}}\]
+with \(\alpha = 0.5\). This down-weights continuations that supported by superficial 
+correlations rather than the task-grounded instruction, reducing hallucination-prone token choices.
+
+
+For multiple-choice (MC) evaluation, we score only the option continuation by masking the shared 
+prompt tokens and compute a contrastive loss:
+\[
+    \mathcal{L}_{\text{cd}} = \mathcal{L}_{\text{strong}} - \alpha\, \mathcal{L}_{\text{weak}}
+\]
+We then normalize per option token to obtain comparable scores across options and derive 
+MC1/MC2 in the usual way. Numerical safeguards (NaN/Inf checks, log-sum-exp style shifting 
+ clipping when converting scores to probabilities) are applied to avoid instability artifacts. 
+ Outputs keep the unified format ``Answer: ...'' to maintain compatibility with BLEU, ROUGE-L, 
+ , and BERTScore-difference.
+
+
+\subsection*{2.8 Self-Consistency}
+
+Self-consistency aims to stabilize answers by sampling multiple diverse candidates and selecting a consensus. We generate \(k=5\) candidates with temperature 0.7 under the truthful QA instruction and extract the final ``Answer:'' line from each. Rather than a simple lexical vote, we compute a semantic consensus: for each candidate, we measure its average BERTScore F1 against the other \(k-1\) candidates and choose the medoid (highest average similarity). If BERTScore is unavailable, we fall back to majority voting over normalized strings. This approach filters out idiosyncratic reasoning paths and reduces hallucinations that appear in only a subset of samples, while preserving brevity and the standardized output format for downstream metrics and MC scoring.
+
+\section*{3 Experiments}
+
+\subsection*{3.1 Evaluation Results}
+
+Table 2.~Mean evaluation metrics for TruthfulQA strategies, including
+accuracy (MC1/MC2), text similarity (BLEU, ROUGE-L), factuality
+(BLEURT), and semantic discrimination (BERTScore difference). Values
+reflect averaged scores over the tested sample for each strategy.
+
+\begin{longtable}{l c c c c c}
+\toprule
+\textbf{Strategy} & \textbf{MC1} & \textbf{MC2} & \textbf{BLEU} & \textbf{ROUGE} & \textbf{BERT} \\
+\midrule
+\endhead
+Baseline & 0.49 & 0.483 & 0.079 & 0.2493 & 0.8771 \\
+Cautious & 0.51 & 0.4867 & 0.0729 & 0.2378 & 0.8762 \\
+CoT & 0.49 & 0.4824 & 0.0777 & 0.2671 & 0.8812 \\
+Fact & 0.54 & 0.4839 & 0.0704 & 0.2282 & 0.8722 \\
+RAG & 0.49 & 0.483 & 0.0772 & 0.25 & 0.8765 \\
+Debate & 0.52 & 0.498 & 0.0744 & 0.1956 & 0.8645 \\
+ContrastiveDec & 0.56 & 0.4901 & 0.0801 & 0.2792 & 0.8805 \\
+SelfConsistency & 0.48 & 0.4888 & 0.1113 & 0.3013 & 0.8916 \\
+\bottomrule
+\end{longtable}
+
+Note.~MC1 is single-true accuracy; MC2 is normalized probability mass on
+correct answers; BLEU, ROUGE-L, BLEURT, and BERTScore\_diff are text
+similarity and factuality metrics. All values are means over the
+evaluated sample.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{hallucination_mitigation_subplots.png}
+\end{figure}
+
+
+\subsection*{3.2 Discussion}
+
+\subsection*{3.3 Qualitative Analysis}
+
+\emph{Table 3: Example Question 1 - What color is the sun when viewed from space?}
+
+\begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
+\toprule
+\textbf{Strategy} & \textbf{Q1: What color is the sun when viewed from space?} & \textbf{Correct?} \\
+\midrule
+\endhead
+Baseline & The sun appears orange when viewed from space. & Incorrect \\
+Cautious & The Sun appears a warm orange or red when viewed from space. & Incorrect \\
+CoT & So, the sun appears to us as a range of colors, but it's actually a mix of all. & Incorrect \\
+Fact Checker & The sun appears white when viewed from space. & Correct \\
+RAG & The sun appears to be a mix of colors, primarily red, orange, and yellow… & Incorrect \\
+Debate & The sun appears red when viewed from space due to Rayleigh scattering. & Incorrect \\
+ContrastiveDec & The sun appears white from space due to its gaseous composition. & Correct \\
+SelfConsistency & The sun appears white when viewed from space. & Correct \\
+Best Answer & The sun is white when viewed from space. & Correct \\
+\bottomrule
+\end{longtable}
+
+\emph{Table 4: Example Question 2}
+
+\begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
+\toprule
+\textbf{Strategy} & \textbf{Q2: [Question text]} & \textbf{Correct?} \\
+\midrule
+\endhead
+Baseline & The sun appears orange when viewed from space. & Incorrect \\
+Cautious & The Sun appears a warm orange or red when viewed from space. & Incorrect \\
+CoT & So, the sun appears to us as a range of colors, but it's actually a mix of all. & Incorrect \\
+Fact Checker & The sun appears white when viewed from space. & Correct \\
+RAG & The sun appears to be a mix of colors, primarily red, orange, and yellow… & Incorrect \\
+Debate & The sun appears red when viewed from space due to Rayleigh scattering. & Incorrect \\
+ContrastiveDec & The sun appears white from space due to its gaseous composition. & Correct \\
+SelfConsistency & The sun appears white when viewed from space. & Correct \\
+Best Answer & The sun is white when viewed from space. & Correct \\
+\bottomrule
+\end{longtable}
+
+\section*{4. Conclusion}
+
+\subsection*{References}
+
+\begin{itemize}
+\item
+  Jones, N. (2025). AI hallucinations can\textquotesingle t be
+  stopped---but these techniques can limit their damage.~\emph{Nature},
+  637(8047), 778-780.
+\item
+  Kalai, A. T., Nachum, O., Vempala, S. S., \& Zhang, E. (2025). Why
+  language models hallucinate.~\emph{arXiv
+  preprint}~arXiv:2509.04664.~\url{https://doi.org/10.48550/arXiv.2509.04664}
+\item
+  Lewis, P., Perez, E., Karpukhin, V., Goyal, N., Yih, W-T., ... \&
+  Riedel, S. (2020). Retrieval-augmented generation for
+  knowledge-intensive NLP tasks.~\emph{Advances in Neural Information
+  Processing Systems}, 33, 9459--9474.~
+  \url{https://doi.org/10.48550/arXiv.2005.11401}
+\item
+  Lin, S., Hilton, J., \& Evans, O. (2021). TruthfulQA: Measuring how
+  models mimic human falsehoods.~\emph{arXiv
+  preprint}~arXiv:2109.07958.~\url{https://doi.org/10.48550/arXiv.2109.07958}
+\item
+  Maleki, N., Padmanabhan, B., \& Dutta, K. (2024). AI hallucinations: A
+  misnomer worth clarifying. \emph{In 2024 IEEE Conference on Artificial
+  Intelligence (CAI)} (pp. 133-138). IEEE.
+  \url{https://doi.org/10.1109/CAI59869.2024.00033}
+\end{itemize}
+
+\end{document}
