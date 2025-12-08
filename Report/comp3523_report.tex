@@ -44,8 +44,8 @@
 
 \section*{1. Introduction}
 
-Artificial intelligence (AI) is transforming different industries and
-schools across the world through different applications such as
+Artificial intelligence (AI) is reshaping industries and schools
+across the world through various applications, such as
 retrieval-augmented generation (RAG) (Jones, 2025; Lewis et al., 2020).
 Despite the skyrocketing adoption of AI, the concerns of hallucinations
 are becoming a heated debate that raises ethical issues in AI usage
@@ -276,35 +276,41 @@ cross-validation.
 
 \subsection*{2.7 Contrastive Decoding}
 
-This strategy contrasts the model's token logits under a strong, 
-truth-oriented prompt with a deliberately weakened prompt to suppress 
-spurious patterns. Concretely, prompts are constructed for the same question: 
-(i) a \emph{strong} instruction (truthful QA, require a single ``Answer: 
-\textless short answer\textgreater'' line), and (ii) a \emph{weak} 
-instruction (``You are an assistant.''). During generation, a logits processor 
-subtracts a scaled copy of the weak-prompt logits from the strong-prompt logits, i.e.,
+This strategy contrasts the model's token logits under a strong prompt with a 
+weakened prompt to filter out generic noise. The prompts are constructed for the same question: 
+(i) a \emph{strong} instruction (``You are a truthful QA assistant. Think 
+step-by-step.''), and (ii) a \emph{weak} instruction with empty instruction. 
+During generation, a logits processor subtracts a scaled copy of the weak-prompt 
+logits from the strong-prompt logits, i.e.,
 \[\text{logits}_{\text{cd}} = \text{logits}_{\text{strong}} - \alpha\, \text{logits}_{\text{weak}}\]
-with \(\alpha = 0.5\). This down-weights continuations that supported by superficial 
-correlations rather than the task-grounded instruction, reducing hallucination-prone token choices.
+with \(\alpha = 0.5\). This filters out weak, surface-level guesses in favor of answers 
+that actually follow the prompt, reducing the risk of hallucinations
 
 
-For multiple-choice (MC) evaluation, we score only the option continuation by masking the shared 
-prompt tokens and compute a contrastive loss:
+For multiple-choice (MC) evaluation, we score only the answer text using the below formula:
 \[
     \mathcal{L}_{\text{cd}} = \mathcal{L}_{\text{strong}} - \alpha\, \mathcal{L}_{\text{weak}}
 \]
-We then normalize per option token to obtain comparable scores across options and derive 
-MC1/MC2 in the usual way. Numerical safeguards (NaN/Inf checks, log-sum-exp style shifting 
- clipping when converting scores to probabilities) are applied to avoid instability artifacts. 
- Outputs keep the unified format ``Answer: ...'' to maintain compatibility with BLEU, ROUGE-L, 
- , and BERTScore-difference.
+note that \(\mathcal{L}\) is the log-probability of tokens and with \(\alpha = 0.5\). We then normalize per option token 
+to obtain comparable scores across options and derive MC1/MC2 in the usual way. To keep 
+calculations stable and avoid odd numerical behaviors, we add simple safety checks: 
+we catch invalid values (NaN/Inf) and use a safe normalization method (log-sum-exp 
+with shifting and clipping) when converting scores into probabilities. This prevents 
+results from blowing up or collapsing. Outputs keep the unified format ``Answer: ...'' 
+to maintain compatibility with BLEU, ROUGE and BERTScore.
 
 
 \subsection*{2.8 Self-Consistency}
 
-Self-consistency aims to stabilize answers by sampling multiple diverse candidates and selecting a consensus. We generate \(k=5\) candidates with temperature 0.7 under the truthful QA instruction and extract the final ``Answer:'' line from each. Rather than a simple lexical vote, we compute a semantic consensus: for each candidate, we measure its average BERTScore F1 against the other \(k-1\) candidates and choose the medoid (highest average similarity). If BERTScore is unavailable, we fall back to majority voting over normalized strings. This approach filters out idiosyncratic reasoning paths and reduces hallucinations that appear in only a subset of samples, while preserving brevity and the standardized output format for downstream metrics and MC scoring.
+Self-consistency aims to stabilize answers by sampling multiple diverse candidates and choosing the most semantically 
+aligned one. We generate \(k=5\) candidates with temperature 0.7 under the instruction (``You are a truthful 
+QA assistant. Think step-by-step''). Rather than a simple lexical vote, we compute a semantic 
+consensus: For each candidate, we measure its average BERTScore F1 against the other \(k-1\) candidates 
+and choose the most representative candidate based on semantic overlap. If BERTScore is unavailable, we fall back to 
+majority voting over normalized strings. This method eliminates unusual reasoning patterns and reduces false information 
+that only appears in a few responses, while keeping answers brief and in a standard format for evaluation.
 
-\section*{3 Experiments}
+\section*{3 Experiments(to be refined)}
 
 \subsection*{3.1 Evaluation Results}
 
@@ -330,13 +336,14 @@ SelfConsistency & 0.48 & 0.4888 & 0.1113 & 0.3013 & 0.8916 \\
 \end{longtable}
 
 Note.~MC1 is single-true accuracy; MC2 is normalized probability mass on
-correct answers; BLEU, ROUGE-L, BLEURT, and BERTScore\_diff are text
+correct answers; BLEU, ROUGE, and BERTScore are text
 similarity and factuality metrics. All values are means over the
 evaluated sample.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{hallucination_mitigation_subplots.png}
+    \caption{Performance of Hallucination Mitigation Strategies Across Evaluation Metrics}
 \end{figure}
 
 
@@ -367,22 +374,36 @@ Best Answer & The sun is white when viewed from space. & Correct \\
 
 \begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
 \toprule
-\textbf{Strategy} & \textbf{Q2: [Question text]} & \textbf{Correct?} \\
+\textbf{Strategy} & \textbf{Q2: [What is the largest desert in the world?]} & \textbf{Correct?} \\
 \midrule
 \endhead
-Baseline & The sun appears orange when viewed from space. & Incorrect \\
-Cautious & The Sun appears a warm orange or red when viewed from space. & Incorrect \\
-CoT & So, the sun appears to us as a range of colors, but it's actually a mix of all. & Incorrect \\
-Fact Checker & The sun appears white when viewed from space. & Correct \\
-RAG & The sun appears to be a mix of colors, primarily red, orange, and yellow… & Incorrect \\
-Debate & The sun appears red when viewed from space due to Rayleigh scattering. & Incorrect \\
-ContrastiveDec & The sun appears white from space due to its gaseous composition. & Correct \\
-SelfConsistency & The sun appears white when viewed from space. & Correct \\
-Best Answer & The sun is white when viewed from space. & Correct \\
+Baseline & The largest desert in the world is the Sahara Desert. & Incorrect \\
+Cautious & The largest desert in the world is the Gobi Desert in the Middle East. & Incorrect \\
+CoT & The Gobi Desert is the largest desert in the world. & Incorrect \\
+Fact Checker & The largest desert in the world is the Sahara Desert. & Incorrect \\
+RAG & Therefore, the largest desert in the world is the Sahara Desert. & Incorrect \\
+Debate & I don`t know, Maybe I should double-check. & Incorrect \\
+ContrastiveDec & California produces the most peaches. & Incorrect \\
+SelfConsistency & California produces the most peaches in the United States. & Incorrect \\
+Best Answer & The Antarctic Desert is the largest desert in the world. & Incorrect \\
 \bottomrule
 \end{longtable}
 
-\section*{4. Conclusion}
+The result shows that sometime, the model might know the answer, but it need more guidance to output
+the correct answer. For example, in Question 1, the baseline model knows that the sun is white when 
+viewed from space, but it outputs orange. With proper guidance, such as fact-checker prompting, contrastive decoding,
+and self-consistency, the model can output the correct answer. However, in Question 2, none of the strategies
+can help the model to output the correct answer. This shows that the model might not have enough
+knowledge to answer the question correctly, which potentially due to the limitation of using small language models.
+\section*{4. Conclusion(To be refined)}
+
+Across TruthfulQA, the most reliable mitigation was contrastive decoding, which achieved the highest single-true 
+accuracy (MC1=0.56), while fact-checker prompting and multi-agent debate offered modest gains. Self-consistency 
+improved fluency and semantic alignment (higher BLEU/ROUGE/BERT) but did not consistently raise factual accuracy, 
+and RAG yielded limited benefits with small models and shallow context. These results highlight that lightweight, 
+quantized SLMs remain vulnerable to hallucinations, and targeted decoding/prompting controls outperform pure sampling 
+or retrieval under tight resource constraints. Future work should explore stronger retrieval pipelines, hybrid 
+combinations of the best strategies, and evaluation on larger models to test scalability and robustness.
 
 \subsection*{References}
 
