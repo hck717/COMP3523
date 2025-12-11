@@ -12,6 +12,7 @@
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{float} % For strict figure placement with [H]
 
 % --- FORMATTING SETUP ---
 % Tighten section spacing
@@ -44,28 +45,36 @@
 
 \section*{Abstract}
 
-Language models offer computational efficiency but are highly susceptible to hallucinations, leading to significant concerns in security and privacy. This research evaluates eight mitigation strategies on small language models using the TruthfulQA benchmark. The experiments measure factual accuracy and semantic consistency, aiming to find out the most efficient hallucination prevention strategies. It is found that contrastive decoding is the most effective defense through an improvement in single-true accuracy from 0.49 to 0.56 compared to the baseline model. Alongside performance comparison across methods, the results demonstrate the effectiveness of different strategies on enhancing the trustworthiness of resource-constrained models. 
+Language models offer efficiency to users but are highly susceptible to hallucinations, 
+leading to significant concerns in security and privacy. This research evaluates eight 
+mitigation strategies on small language models using the TruthfulQA benchmark. The 
+experiments measure factual accuracy and semantic consistency, aiming to find out 
+the most efficient hallucination prevention strategies. It is found that contrastive 
+decoding is the most effective defense through an improvement in all evaluation metrics. 
+Alongside performance comparison across methods, the results demonstrate the effectiveness 
+of different strategies on enhancing the trustworthiness of resource-constrained models. 
 
-\section*{1. Introduction}
+\section{Introduction}
 
 Artificial intelligence (AI) is reshaping industries and schools
 across the world through various applications, such as
 retrieval-augmented generation (RAG) (Jones, 2025; Lewis et al., 2020).
 Despite the skyrocketing adoption of AI, the concerns of hallucinations
 are becoming a heated debate that raises ethical issues in AI usage
-(Jones, 2025; IEEE Xplore, 2024). This research paper aims to provide an
-overview of the effectiveness of different strategies in reducing
-hallucination rate.
+(Jones, 2025; IEEE Xplore, 2024). AI hallucinations can lead to
+significant security risks by causing navigation errors, financial losses, 
+incorrect medical diagnoses, and missed security threats(Sood et al., 2025). 
+This research paper aims to provide an overview of the effectiveness of 
+different strategies in reducing hallucination rate.
 
-\subsection*{1.1 Background}
+\subsection{Background}
 
 Large Language Models (LLMs) have become pivotal to recent advances in
 natural language processing through a remarkable improvement in
 proficiency and speed of our daily work. (Kalai et al., 2024). However,
-while adoption across diverse domains are being rapid, their
-transformative utility and inherent limitations are being overlooked.
-Among all challenges, hallucination is one of the most important ones.
-It refers to the tendency of models to produce fluent yet factually
+despite their rapid adoption across diverse domains, their limitations remain 
+largely overlooked. Among all challenges, hallucination is one of the most 
+important ones. It refers to the tendency of models to produce fluent yet factually
 inaccurate outputs (Kalai et al., 2024; IEEE Xplore, 2024). These errors
 caused trust and dependability, especially in settings where factual
 accuracy is essential (Jones, 2025).
@@ -74,8 +83,8 @@ This project aims to address these challenges by evaluating the
 effectiveness of several defense strategies with the evaluation on
 TruthfulQA dataset. TruthfulQA dataset will provide insightful
 performance metrics of the outputs by rigorously assessing factual
-correctness (Lin et al., 2021). By comparing hallucination rates across
-all strategies, a systematic assessment will be provided.
+correctness (Lin et al., 2021). To compare the hallucination rates 
+across all strategies, a systematic assessment will be applied.
 
 In doing so, the project leverages this benchmark while focusing on
 small, quantized models such as DeepSeek-R1-Distill-Qwen-1.5B and
@@ -83,7 +92,7 @@ Granite-4.0-h-1b. This focus situates the work within the broader effort
 to ensure that resource-efficient models remain both accessible and
 dependable.
 
-\subsection*{1.2 Motivation}
+\subsection{Motivation}
 
 The motivation arises because, in general, the reliance on LLMs is
 growing each day in everyday workflows and decision-making everywhere.
@@ -103,7 +112,7 @@ efficiency and factual truthfulness. Ultimately, the study aims to
 provide suggestions on having trustworthy adoption of LLM systems by
 eliminating the hallucination risk.
 
-\subsection*{1.3 Objectives}
+\subsection{Objectives}
 
 The goals of this project are to implement and compare several
 strategies of hallucination prevention on the LLM models. Their
@@ -116,7 +125,7 @@ and computational efficiency. More importantly, the project also aims at
 reproducibility and transparency through structured workflows and clear
 documentation for future larger-scale research.
 
-\subsection*{1.4 Scope of Work}
+\subsection{Scope of Work}
 
 The scope of this project is defined by the implementation and
 evaluation of the proposed defense strategies. Each strategy in
@@ -124,11 +133,11 @@ particular will be evaluated against the reference answers on the
 TruthfulQA dataset using small language models. This work is limited to
 this dataset and these models, focusing on the explainability of the
 models\textquotesingle{} hallucination situation with constrained
-computational resources.While the findings may have implications for
+computational resources. While the findings may have implications for
 larger models, the primary emphasis remains on practical defences for
 language models.
 
-\subsection*{1.5 Report Outline}
+\subsection{Report Outline}
 
 The following parts of the report is organized into several sections:
 methodology describes the design of the project, including the selection
@@ -140,7 +149,13 @@ considering broader improvements and combinations of methods. The
 conclusion summarizes the contributions and suggests directions for
 future research and application.
 
-\section*{2. Methodology}
+\section{Methodology}
+The methodology of this project is designed to evaluate the
+effectiveness of several hallucination prevention strategies on the
+TruthfulQA dataset using small, quantized language models. In the
+following sub-sections, the rationale and implementation of each
+strategy included in Table 1 will be explained with details alongside
+the methodology of the evaluation of their performances.
 
 \emph{Table 1: Overview of Hallucination Defenses}
 
@@ -160,19 +175,12 @@ Self-Consistency & Sampling / Consensus & Samples multiple answers and selects t
 \bottomrule
 \end{longtable}
 
-The methodology of this project is designed to evaluate the
-effectiveness of several hallucination prevention strategies on the
-TruthfulQA dataset using small, quantized language models. In the
-following sub-sections, the rationale and implementation of each
-strategy included in Table 1 will be explained with details alongside
-the methodology of the evaluation of their performances.
-
-\subsection*{2.1 Setup}
+\subsection{Setup}
 
 All experiments were conducted on Kaggle, which provides free access to
-NVIDIA Tesla P100 GPUs. Despite the ability of larger models, the
-research team works under the limited GPU usage of thirty hours per
-week, and so the team selected models in a one-and-a-half billion
+NVIDIA Tesla P100 GPUs. Despite the ability of larger models, we 
+worked under limited GPU usage of 30 hours per
+week, and so we selected models in a one-and-a-half billion
 parameter range to experiment. The primary model selected was
 DeepSeek-R1-Distill-Qwen-1.5B, chosen for its balance of efficiency and
 capability. A secondary model, Granite-4.0-h-1b, was included to support
@@ -182,11 +190,11 @@ efficiency and reduce memory usage. This setup ensured that the project
 can be finished within the Kaggle free-tier environment and supported
 all the aims of the research project.
 
-\subsection*{2.2 Evaluation}
+\subsection{Evaluation}
 
-\subsection*{2.3 Baseline}
+\subsubsection{Baseline}
 
-At first, the project presents all the questions from the TruthfulQA
+At first, we presented all the questions from the TruthfulQA
 dataset directly to the DeepSeek model without any instructions. The
 model was simply inputted with the questions and was prompted to provide
 an answer. This approach revealed the model's natural tendencies,
@@ -194,7 +202,7 @@ including its original accuracy and the ability to avoid hallucination
 under the rewarding mechanism. The baseline was essential for further
 comparison with different prevention methods to show the effectiveness.
 
-\subsection*{2.4 Prompting Methods}
+\subsection{Prompting Methods}
 
 Prompting methods represent a series of strategies that leverage the
 prompt instructions to guide the model's behaviours (Kalai et al.,
@@ -204,21 +212,20 @@ chain-of-thought prompting, and fact-checker prompting. Each style was
 designed to mitigate hallucinations by shaping the model's thinking and
 processing styles.
 
-\subsection*{2.4.1 Cautious Prompting}
+\subsubsection{Cautious Prompting}
 
 Cautious prompting guides the model with a clear system instruction that
 explicitly encourages the model to answer only when confident and to
 respond with ``I don't know'' if there is no obvious answer (Kalai et
 al., 2024). The model was guided with a prompt: \emph{``Answer only if
-certain. Else: `I don't know'.''} These instructions were designed to
-avoid the situation where language models generate ``make-up'' answers
-because of the rewarding mechanism by suggesting a model guess and
-answer even without clear evidence. With this strategy, the model is
+certain. Else: `I don't know'.''} These instructions were designed to 
+prevent models from making up answers by requiring them to only respond 
+when they have clear evidence. With this strategy, the model is
 expected to admit uncertainty rather than fabricate information. This
 method was particularly effective in contexts where speculative answers
 could mislead users, as it prioritized accuracy over fluency.
 
-\subsection*{2.4.2 Chain-of-Thought Prompting}
+\subsubsection{Chain-of-Thought Prompting}
 
 Chain-of-thought prompting instructs the model to think and process step
 by step before producing a final, concise answer (Kalai et al., 2024).
@@ -231,7 +238,7 @@ quality of the final answer, referencing the human's thinking mechanism.
 The rationale was that leveraging structured reasoning is likely to
 reduce unsupported outputs, and so reduce the hallucination rate.
 
-\subsection*{2.4.3 Fact-Checker Prompting}
+\subsubsection{Fact-Checker Prompting}
 
 The fact-checker prompting method positioned the model to validate its
 answer before outputting it to users. The system instruction was framed
@@ -243,7 +250,7 @@ truths rather than inventing incorrect statements. The rationale adopted
 by the stance of a fact-checker reduces hallucinations and enhances
 trustworthiness.
 
-\subsection*{2.5 Retrieval-Augmented Generation (RAG)}
+\subsection{Retrieval-Augmented Generation (RAG)}
 
 Retrieval-Augmented Generation integrated external authentic knowledge
 into the model's output by retrieving summaries from Wikipedia and
@@ -261,7 +268,7 @@ but incorrect information. This method is particularly valuable for
 small models, which may lack the breadth of training data available to
 larger counterparts.
 
-\subsection*{2.6 Multi-Agent Debate}
+\subsection{Multi-Agent Debate}
 
 The multi-agent debate method leveraged the power of two models,
 DeepSeek and Granite. They are engaging in a structured exchange. They
@@ -278,7 +285,7 @@ is expected to generate a more reliable final output, drawing
 inspiration from human debate and enhancing truthfulness through
 cross-validation.
 
-\subsection*{2.7 Contrastive Decoding}
+\subsection{Contrastive Decoding}
 
 This strategy contrasts the model's token logits under a strong prompt with a 
 weakened prompt to filter out generic noise. The prompts are constructed for the same question: 
@@ -304,7 +311,7 @@ results from blowing up or collapsing. Outputs keep the unified format ``Answer:
 to maintain compatibility with BLEU, ROUGE and BERTScore.
 
 
-\subsection*{2.8 Self-Consistency}
+\subsection{Self-Consistency}
 
 Self-consistency aims to stabilize answers by sampling multiple diverse candidates and choosing the most semantically 
 aligned one. We generate \(k=5\) candidates with temperature 0.7 under the instruction (``You are a truthful 
@@ -314,9 +321,9 @@ and choose the most representative candidate based on semantic overlap. If BERTS
 majority voting over normalized strings. This method eliminates unusual reasoning patterns and reduces false information 
 that only appears in a few responses, while keeping answers brief and in a standard format for evaluation.
 
-\section*{3 Experiments(to be refined)}
+\section{Experiments (to be refined)}
 
-\subsection*{3.1 Evaluation Results}
+\subsection{Evaluation Results}
 
 
 \begin{longtable}{l c c c c c}
@@ -359,16 +366,16 @@ correct answers; BLEU, ROUGE, and BERTScore are text
 similarity and factuality metrics. All values are means over the
 evaluated sample.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{hallucination_mitigation_subplots.png}
     \caption{Performance of Hallucination Mitigation Strategies Across Evaluation Metrics}
 \end{figure}
 
 
-\subsection*{3.2 Discussion}
+\subsection{Discussion}
 
-\subsection*{3.3 Qualitative Analysis}
+\subsubsection{Qualitative Analysis}
 
 \begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
 \caption{Qualitative Comparison: Example Question 1} \label{tab:q1} \\
@@ -401,10 +408,6 @@ Best Answer & The sun is white when viewed from space. & Correct \\
 \toprule
 \textbf{Strategy} & \textbf{Q2: What is the largest desert in the world?} & \textbf{Correct?} \\
 \midrule
-\endfirsthead
-\toprule
-\textbf{Strategy} & \textbf{Q2: What is the largest desert in the world?} & \textbf{Correct?} \\
-\midrule
 \endhead
 \bottomrule
 \endfoot
@@ -424,13 +427,13 @@ Best Answer & The Antarctic Desert is the largest desert in the world. & Incorre
 
 
 These results show the model might know the answer in certain aspects, but it is shown that language models require more guidance to output
-the correct answer. For example, in Question 1, the baseline model knows that the sun is white when 
+the correct answer. For example, in Question 1 (Table 3), the baseline model knows that the sun is white when 
 viewed from space, but it outputs orange. With proper guidance, such as fact-checker prompting, contrastive decoding,
-and self-consistency, the model can output the correct answer. However, in Question 2, none of the strategies
+and self-consistency, the model can output the correct answer. However, in Question 2 (Table 4), none of the strategies
 can help the model to output the correct answer. This shows that the model might not have enough
 knowledge to answer the question correctly, which is potentially due to the limitation of using small language models.
 
-\section*{4. Conclusion(To be refined)}
+\section{Conclusion(To be refined)}
 
 This research successfully implemented and evaluated the effectiveness of eight distinct strategies in mitigating hallucinations for 1.5B parameter quantized language models. Examining the performance of on the one hundred selected questions, it is shown that contrastive decoding provides the most significant increase in factual accuracy, achieving the highest single-true accuracy (MC1 = 0.56). While prompting techniques such as fact-checker prompting provided minor improvement, and more complex approaches like multi-agent debate and RAG delivered limited benefits despite their meaningful methodologies. Moreover, it is found that the self-consistency method improved the text generation fluency (BLEU Score/ ROUGE Score), but could not help with the main goal to increase factual accuracy. 
 
@@ -464,6 +467,11 @@ Future work should explore several directions with a larger language model (such
   misnomer worth clarifying. \emph{In 2024 IEEE Conference on Artificial
   Intelligence (CAI)} (pp. 133-138). IEEE.
   \url{https://doi.org/10.1109/CAI59869.2024.00033}
+\item
+  Sood, A. K., Zeadally, S., \& Hong, E. (2025). The Paradigm of Hallucinations 
+  in AI-driven cybersecurity systems: Understanding taxonomy, classification outcomes, 
+  and mitigations. Computers and Electrical Engineering, 124, 110307.
+  \url{https://doi.org/10.1016/j.compeleceng.2025.110307}
 \end{itemize}
 
 \end{document}
