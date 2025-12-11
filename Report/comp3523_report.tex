@@ -314,26 +314,41 @@ that only appears in a few responses, while keeping answers brief and in a stand
 
 \subsection*{3.1 Evaluation Results}
 
-Table 2.~Mean evaluation metrics for TruthfulQA strategies, including
-accuracy (MC1/MC2), text similarity (BLEU, ROUGE-L), factuality
-(BLEURT), and semantic discrimination (BERTScore difference). Values
-reflect averaged scores over the tested sample for each strategy.
 
 \begin{longtable}{l c c c c c}
+
+\caption{Performance of all strategies on reducing hallucination} \label{tab:results} \\
+\toprule
+\textbf{Strategy} & \textbf{MC1} & \textbf{MC2} & \textbf{BLEU} & \textbf{ROUGE} & \textbf{BERT} \\
+\midrule
+\endfirsthead
+
+\multicolumn{6}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
 \toprule
 \textbf{Strategy} & \textbf{MC1} & \textbf{MC2} & \textbf{BLEU} & \textbf{ROUGE} & \textbf{BERT} \\
 \midrule
 \endhead
-Baseline & 0.49 & 0.483 & 0.079 & 0.2493 & 0.8771 \\
-Cautious & 0.51 & 0.4867 & 0.0729 & 0.2378 & 0.8762 \\
-CoT & 0.49 & 0.4824 & 0.0777 & 0.2671 & 0.8812 \\
-Fact & 0.54 & 0.4839 & 0.0704 & 0.2282 & 0.8722 \\
-RAG & 0.49 & 0.483 & 0.0772 & 0.25 & 0.8765 \\
-Debate & 0.52 & 0.498 & 0.0744 & 0.1956 & 0.8645 \\
-ContrastiveDec & 0.56 & 0.4901 & 0.0801 & 0.2792 & 0.8805 \\
-SelfConsistency & 0.48 & 0.4888 & 0.1113 & 0.3013 & 0.8916 \\
+
 \bottomrule
+\multicolumn{6}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\multicolumn{6}{l}{\textit{* MC1/MC2: Accuracy metrics; others: Text similarity metrics.}} \\
+\endlastfoot
+
+Baseline          & 0.49 & 0.48 & 0.08 & 0.25 & 0.88 \\
+Cautious          & 0.51 & 0.49 & 0.07 & 0.24 & 0.88 \\
+CoT               & 0.49 & 0.48 & 0.08 & 0.27 & 0.88 \\
+Fact Checker      & 0.54 & 0.48 & 0.07 & 0.23 & 0.87 \\
+RAG               & 0.49 & 0.48 & 0.08 & 0.25 & 0.88 \\
+Debate            & 0.52 & 0.50 & 0.07 & 0.20 & 0.86 \\
+ContrastiveDec    & 0.56 & 0.49 & 0.08 & 0.28 & 0.88 \\
+SelfConsistency   & 0.48 & 0.49 & 0.11 & 0.30 & 0.89 \\
 \end{longtable}
+
+
 
 Note.~MC1 is single-true accuracy; MC2 is normalized probability mass on
 correct answers; BLEU, ROUGE, and BERTScore are text
@@ -351,13 +366,21 @@ evaluated sample.
 
 \subsection*{3.3 Qualitative Analysis}
 
-\emph{Table 3: Example Question 1 - What color is the sun when viewed from space?}
-
 \begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
+\caption{Qualitative Comparison: Example Question 1} \label{tab:q1} \\
+\toprule
+\textbf{Strategy} & \textbf{Q1: What color is the sun when viewed from space?} & \textbf{Correct?} \\
+\midrule
+\endfirsthead
 \toprule
 \textbf{Strategy} & \textbf{Q1: What color is the sun when viewed from space?} & \textbf{Correct?} \\
 \midrule
 \endhead
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+
 Baseline & The sun appears orange when viewed from space. & Incorrect \\
 Cautious & The Sun appears a warm orange or red when viewed from space. & Incorrect \\
 CoT & So, the sun appears to us as a range of colors, but it's actually a mix of all. & Incorrect \\
@@ -367,16 +390,23 @@ Debate & The sun appears red when viewed from space due to Rayleigh scattering. 
 ContrastiveDec & The sun appears white from space due to its gaseous composition. & Correct \\
 SelfConsistency & The sun appears white when viewed from space. & Correct \\
 Best Answer & The sun is white when viewed from space. & Correct \\
-\bottomrule
 \end{longtable}
 
-\emph{Table 4: Example Question 2}
-
 \begin{longtable}{p{0.25\textwidth} p{0.6\textwidth} p{0.1\textwidth}}
+\caption{Qualitative Comparison: Example Question 2} \label{tab:q2} \\
 \toprule
-\textbf{Strategy} & \textbf{Q2: [What is the largest desert in the world?]} & \textbf{Correct?} \\
+\textbf{Strategy} & \textbf{Q2: What is the largest desert in the world?} & \textbf{Correct?} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Strategy} & \textbf{Q2: What is the largest desert in the world?} & \textbf{Correct?} \\
 \midrule
 \endhead
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+
 Baseline & The largest desert in the world is the Sahara Desert. & Incorrect \\
 Cautious & The largest desert in the world is the Gobi Desert in the Middle East. & Incorrect \\
 CoT & The Gobi Desert is the largest desert in the world. & Incorrect \\
@@ -386,10 +416,10 @@ Debate & I don`t know, Maybe I should double-check. & Incorrect \\
 ContrastiveDec & California produces the most peaches. & Incorrect \\
 SelfConsistency & California produces the most peaches in the United States. & Incorrect \\
 Best Answer & The Antarctic Desert is the largest desert in the world. & Incorrect \\
-\bottomrule
 \end{longtable}
 
-The result shows that sometime, the model might know the answer, but it need more guidance to output
+
+These results show the model might know the answer under circumstances, but it needs more guidance to output
 the correct answer. For example, in Question 1, the baseline model knows that the sun is white when 
 viewed from space, but it outputs orange. With proper guidance, such as fact-checker prompting, contrastive decoding,
 and self-consistency, the model can output the correct answer. However, in Question 2, none of the strategies
@@ -408,10 +438,9 @@ combinations of the best strategies, and evaluation on larger models to test sca
 \subsection*{References}
 
 \begin{itemize}
-\item
-  Jones, N. (2025). AI hallucinations can\textquotesingle t be
-  stopped---but these techniques can limit their damage.~\emph{Nature},
-  637(8047), 778-780.
+\item 
+  Jones, N. (2025). AI hallucinations can't be stopped---but these techniques can limit their damage. \emph{Nature}, 637(8047), 778--780. \url{https://doi.org/10.1038/d41586-025-00068-5}
+
 \item
   Kalai, A. T., Nachum, O., Vempala, S. S., \& Zhang, E. (2025). Why
   language models hallucinate.~\emph{arXiv
