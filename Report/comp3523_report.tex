@@ -42,6 +42,10 @@
     \textbf{Date of Submission: 14-12-2025}
 \end{center}
 
+\section*{Abstract}
+
+Language models offer computational efficiency but are highly susceptible to hallucinations, leading to significant concerns in security and privacy. This research evaluates eight mitigation strategies on small language models using the TruthfulQA benchmark. The experiments measure factual accuracy and semantic consistency, aiming to find out the most efficient hallucination prevention strategies. It is found that contrastive decoding is the most effective defense through an improvement in single-true accuracy from 0.49 to 0.56 compared to the baseline model. Alongside performance comparison across methods, the results demonstrate the effectiveness of different strategies on enhancing the trustworthiness of resource-constrained models. 
+
 \section*{1. Introduction}
 
 Artificial intelligence (AI) is reshaping industries and schools
@@ -419,23 +423,23 @@ Best Answer & The Antarctic Desert is the largest desert in the world. & Incorre
 \end{longtable}
 
 
-These results show the model might know the answer under circumstances, but it needs more guidance to output
+These results show the model might know the answer in certain aspects, but it is shown that language models require more guidance to output
 the correct answer. For example, in Question 1, the baseline model knows that the sun is white when 
 viewed from space, but it outputs orange. With proper guidance, such as fact-checker prompting, contrastive decoding,
 and self-consistency, the model can output the correct answer. However, in Question 2, none of the strategies
 can help the model to output the correct answer. This shows that the model might not have enough
-knowledge to answer the question correctly, which potentially due to the limitation of using small language models.
+knowledge to answer the question correctly, which is potentially due to the limitation of using small language models.
+
 \section*{4. Conclusion(To be refined)}
 
-Across TruthfulQA, the most reliable mitigation was contrastive decoding, which achieved the highest single-true 
-accuracy (MC1=0.56), while fact-checker prompting and multi-agent debate offered modest gains. Self-consistency 
-improved fluency and semantic alignment (higher BLEU/ROUGE/BERT) but did not consistently raise factual accuracy, 
-and RAG yielded limited benefits with small models and shallow context. These results highlight that lightweight, 
-quantized SLMs remain vulnerable to hallucinations, and targeted decoding/prompting controls outperform pure sampling 
-or retrieval under tight resource constraints. Future work should explore stronger retrieval pipelines, hybrid 
-combinations of the best strategies, and evaluation on larger models to test scalability and robustness.
+This research successfully implemented and evaluated the effectiveness of eight distinct strategies in mitigating hallucinations for 1.5B parameter quantized language models. Examining the performance of on the one hundred selected questions, it is shown that contrastive decoding provides the most significant increase in factual accuracy, achieving the highest single-true accuracy (MC1 = 0.56). While prompting techniques such as fact-checker prompting provided minor improvement, and more complex approaches like multi-agent debate and RAG delivered limited benefits despite their meaningful methodologies. Moreover, it is found that the self-consistency method improved the text generation fluency (BLEU Score/ ROUGE Score), but could not help with the main goal to increase factual accuracy. 
 
-\subsection*{References}
+With these results and observations, the experiments deliver a message that for resource-constrained models, interventions directly targeting the decoding process are more effective than providing external retrieval knowledge or a complex processing architecture. 
+
+Future work should explore several directions with a larger language model (such as 7B and 13B parameter models) without resource limitations to show a better overview of the strategies' effectiveness. Meanwhile, it is suggested that hybrid strategies, such as combining the RAG pipeline with contrastive decoding, should be evaluated based on the combined power of the two strategies. Second, adpative methods, such as dynamically adjusting the alapha parameter in contrastive decoding based on confidence scores should also be leveraged based on the preliminary effective performance by contrastive decoding. Finally, evaluation on specialized models with domain-specific datasets with also be suggested which is crucial in real-world applications where customized AI agent and language models would be more commonly used. 
+
+\clearpage
+\section*{References}
 
 \begin{itemize}
 \item 
