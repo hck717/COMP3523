@@ -43,7 +43,9 @@
     \textbf{Date of Submission: 14-12-2025}
 \end{center}
 
-\section*{Abstract}
+\begin{center}
+	\textbf{Abstract}
+\end{center}
 
 Language models offer efficiency to users but are highly susceptible to hallucinations, 
 leading to significant concerns in security and privacy. This research evaluates eight 
@@ -321,7 +323,7 @@ and choose the most representative candidate based on semantic overlap. If BERTS
 majority voting over normalized strings. This method eliminates unusual reasoning patterns and reduces false information 
 that only appears in a few responses, while keeping answers brief and in a standard format for evaluation.
 
-\section{Experiments (to be refined)}
+\section{Experiments and Results}
 
 \subsection{Evaluation Results}
 
@@ -371,6 +373,13 @@ evaluated sample.
     \includegraphics[width=1\textwidth]{hallucination_mitigation_subplots.png}
     \caption{Performance of Hallucination Mitigation Strategies Across Evaluation Metrics}
 \end{figure}
+
+Table \ref{tab:results} and Figure~1 demonstrate that MC1/MC2 consistently 
+improve across defenses methods, whereas BLEU, ROUGE, and BERT show performance 
+variation depending on the method. Among the strategies, self consistency performs the 
+best in general, followed by constrastive decoding. Other approach yield
+marginal improvements on specific metrics and fail to outperform the baseline 
+consistently.
 
 
 \subsection{Discussion}
@@ -426,20 +435,20 @@ Best Answer & The Antarctic Desert is the largest desert in the world. & Incorre
 \end{longtable}
 
 
-These results show the model might know the answer in certain aspects, but it is shown that language models require more guidance to output
+These results show the model might know the answer in certain aspects, but it requires more guidance to output
 the correct answer. For example, in Question 1 (Table 3), the baseline model knows that the sun is white when 
 viewed from space, but it outputs orange. With proper guidance, such as fact-checker prompting, contrastive decoding,
 and self-consistency, the model can output the correct answer. However, in Question 2 (Table 4), none of the strategies
 can help the model to output the correct answer. This shows that the model might not have enough
 knowledge to answer the question correctly, which is potentially due to the limitation of using small language models.
 
-\section{Conclusion(To be refined)}
+\section{Conclusion}
 
 This research successfully implemented and evaluated the effectiveness of eight distinct strategies in mitigating hallucinations for 1.5B parameter quantized language models. Examining the performance of on the one hundred selected questions, it is shown that contrastive decoding provides the most significant increase in factual accuracy, achieving the highest single-true accuracy (MC1 = 0.56). While prompting techniques such as fact-checker prompting provided minor improvement, and more complex approaches like multi-agent debate and RAG delivered limited benefits despite their meaningful methodologies. Moreover, it is found that the self-consistency method improved the text generation fluency (BLEU Score/ ROUGE Score), but could not help with the main goal to increase factual accuracy. 
 
 With these results and observations, the experiments deliver a message that for resource-constrained models, interventions directly targeting the decoding process are more effective than providing external retrieval knowledge or a complex processing architecture. 
 
-Future work should explore several directions with a larger language model (such as 7B and 13B parameter models) without resource limitations to show a better overview of the strategies' effectiveness. Meanwhile, it is suggested that hybrid strategies, such as combining the RAG pipeline with contrastive decoding, should be evaluated based on the combined power of the two strategies. Second, adpative methods, such as dynamically adjusting the alapha parameter in contrastive decoding based on confidence scores should also be leveraged based on the preliminary effective performance by contrastive decoding. Finally, evaluation on specialized models with domain-specific datasets with also be suggested which is crucial in real-world applications where customized AI agent and language models would be more commonly used. 
+Future work should explore several directions with a larger language model (such as 7B and 13B parameter models) without resource limitations to show a better overview of the strategies' effectiveness. Meanwhile, it is suggested that hybrid strategies, such as combining the RAG pipeline with contrastive decoding, should be evaluated based on the combined power of the two strategies. Second, adpative methods, such as dynamically adjusting the alpha parameter in contrastive decoding based on confidence scores should also be leveraged based on the preliminary effective performance by contrastive decoding. Finally, evaluation on specialized models with domain-specific datasets with also be suggested which is crucial in real-world applications where customized AI agent and language models would be more commonly used. 
 
 \clearpage
 \section*{References}
