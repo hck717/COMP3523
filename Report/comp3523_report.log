@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.11.2)  14 DEC 2025 00:53
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.11.2)  14 DEC 2025 01:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -379,11 +379,7 @@ File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
 \l__pdf_internal_box=\box66
 \g__pdf_backend_annotation_int=\count310
 \g__pdf_backend_link_int=\count311
-) (./comp3523_report.aux
-
-LaTeX Warning: Label `tab:q2' multiply defined.
-
-)
+) (./comp3523_report.aux)
 \openout1 = `comp3523_report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
@@ -452,52 +448,56 @@ Package hyperref Info: Link coloring OFF on input line 36.
 
 
 
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+
+
 [1
 
 ]
-Overfull \hbox (1.08994pt too wide) in alignment at lines 166--170
+Overfull \hbox (1.08994pt too wide) in alignment at lines 164--169
  [] [] [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--173
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
 []|\T1/lmr/m/n/10.95 Chain-of-Thought
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 175--175
+Underfull \hbox (badness 10000) in paragraph at lines 174--174
 []|\T1/lmr/m/n/10.95 Retrieval-Augmented
  []
 
 
-Underfull \hbox (badness 2781) in paragraph at lines 176--176
+Underfull \hbox (badness 2781) in paragraph at lines 175--175
 []|\T1/lmr/m/n/10.95 Multi-model / De-
  []
 
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 177.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 176.
 (c:/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 177.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 176.
  (c:/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 177.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 176.
  (c:/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 177.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 176.
  (c:/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 177.
+(Font)              <10.95> on input line 176.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 177.
+(Font)              <8> on input line 176.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 177.
+(Font)              <6> on input line 176.
 
-Overfull \hbox (1.08994pt too wide) in alignment at lines 170--180
+Overfull \hbox (1.08994pt too wide) in alignment at lines 169--179
  [] [] [] 
  []
 
@@ -511,55 +511,59 @@ File: hallucination_mitigation_subplots.png Graphic file (type bmp)
 
 
 [5]
-Overfull \hbox (11.07294pt too wide) in alignment at lines 391--396
+
+LaTeX Warning: Reference `tab:results' on page 6 undefined on input line 378.
+
+
+Overfull \hbox (11.07294pt too wide) in alignment at lines 390--395
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 396--400
+Overfull \hbox (11.07294pt too wide) in alignment at lines 395--399
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 400--402
+Overfull \hbox (11.07294pt too wide) in alignment at lines 399--401
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 402--404
+Overfull \hbox (11.07294pt too wide) in alignment at lines 401--403
  [] [] [] 
  []
 
 Missing character: There is no … ("2026) in font ec-lmr10!
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 404--415
+Overfull \hbox (11.07294pt too wide) in alignment at lines 403--414
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 417--422
+Overfull \hbox (11.07294pt too wide) in alignment at lines 416--421
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 422--424
+Overfull \hbox (11.07294pt too wide) in alignment at lines 421--423
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 424--426
+Overfull \hbox (11.07294pt too wide) in alignment at lines 423--425
  [] [] [] 
  []
 
 
-Overfull \hbox (11.07294pt too wide) in alignment at lines 426--437
+Overfull \hbox (11.07294pt too wide) in alignment at lines 425--436
  [] [] [] 
  []
 
 [6]
 
 [7]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 460.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 459.
  (c:/texlive/2024/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -573,18 +577,27 @@ L3 programming layer <2024-10-09>
  ***********
 
 
-LaTeX Warning: There were multiply-defined labels.
+LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: File `comp3523_report.out' has not changed.
-(rerunfilecheck)             Checksum: 4ACAEEE4ED276B6CCBC39A7F7ED6144E;3155.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `comp3523_report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `comp3523_report.out':
+(rerunfilecheck)             Before: D41D8CD98F00B204E9800998ECF8427E;0
+(rerunfilecheck)             After:  4ACAEEE4ED276B6CCBC39A7F7ED6144E;3155.
  ) 
 Here is how much of TeX's memory you used:
- 10867 strings out of 474233
- 167227 string characters out of 5745780
- 581916 words of memory out of 5000000
- 33409 multiletter control sequences out of 15000+600000
+ 10861 strings out of 474233
+ 167158 string characters out of 5745780
+ 577961 words of memory out of 5000000
+ 33403 multiletter control sequences out of 15000+600000
  595678 words of font info for 59 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 72i,8n,79p,860b,461s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,8n,79p,860b,462s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on comp3523_report.pdf (8 pages).
