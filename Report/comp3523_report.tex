@@ -4,6 +4,8 @@
 \usepackage{lmodern}
 \usepackage[margin=0.8in]{geometry} % Tighter margins (0.8 inch)
 \usepackage{longtable}
+% Make longtable captions span full text width
+\setlength{\LTcapwidth}{\textwidth}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{hyperref}
@@ -161,7 +163,7 @@ the methodology of the evaluation of their performances.
 
 \emph{Table 1: Overview of Hallucination Defenses}
 
-\begin{longtable}{p{0.25\textwidth} p{0.2\textwidth} p{0.5\textwidth}}
+\begin{longtable}{p{0.25\textwidth} p{0.2\textwidth} p{0.48\textwidth}}
 \toprule
 \textbf{Strategy} & \textbf{Category} & \textbf{Core Mechanism} \\
 \midrule
@@ -328,7 +330,7 @@ that only appears in a few responses, while keeping answers brief and in a stand
 \subsection{Evaluation Results}
 
 
-\begin{longtable}{l c c c c c}
+\begin{longtable}{p{0.18\textwidth} p{0.13\textwidth} p{0.13\textwidth} p{0.13\textwidth} p{0.13\textwidth} p{0.146\textwidth}}
 
 \caption{Performance of all strategies on reducing hallucination} \label{tab:results} \\
 \toprule
