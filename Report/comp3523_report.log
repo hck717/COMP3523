@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.11.2)  14 DEC 2025 01:01
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.11.2)  14 DEC 2025 01:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -379,7 +379,14 @@ File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
 \l__pdf_internal_box=\box66
 \g__pdf_backend_annotation_int=\count310
 \g__pdf_backend_link_int=\count311
-) (./comp3523_report.aux)
+) (./comp3523_report.aux
+
+LaTeX Warning: Label `tab:overview' multiply defined.
+
+
+LaTeX Warning: Label `tab:q2' multiply defined.
+
+)
 \openout1 = `comp3523_report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
@@ -448,10 +455,6 @@ Package hyperref Info: Link coloring OFF on input line 36.
 
 
 
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
-
-
 [1
 
 ]
@@ -511,10 +514,6 @@ File: hallucination_mitigation_subplots.png Graphic file (type bmp)
 
 
 [5]
-
-LaTeX Warning: Reference `tab:results' on page 6 undefined on input line 378.
-
-
 Overfull \hbox (11.07294pt too wide) in alignment at lines 390--395
  [] [] [] 
  []
@@ -577,27 +576,18 @@ L3 programming layer <2024-10-09>
  ***********
 
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: There were multiply-defined labels.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `comp3523_report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `comp3523_report.out':
-(rerunfilecheck)             Before: D41D8CD98F00B204E9800998ECF8427E;0
-(rerunfilecheck)             After:  4ACAEEE4ED276B6CCBC39A7F7ED6144E;3155.
+Package rerunfilecheck Info: File `comp3523_report.out' has not changed.
+(rerunfilecheck)             Checksum: 4ACAEEE4ED276B6CCBC39A7F7ED6144E;3155.
  ) 
 Here is how much of TeX's memory you used:
- 10861 strings out of 474233
- 167158 string characters out of 5745780
- 577961 words of memory out of 5000000
- 33403 multiletter control sequences out of 15000+600000
+ 10868 strings out of 474233
+ 167241 string characters out of 5745780
+ 581971 words of memory out of 5000000
+ 33410 multiletter control sequences out of 15000+600000
  595678 words of font info for 59 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 72i,8n,79p,860b,462s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,8n,79p,860b,461s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on comp3523_report.pdf (8 pages).
